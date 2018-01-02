@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Node Hello world example</title>
+    </head>
+    <body>
+        <form action="http://localhost:3000/userform" method="GET"> <!--action=adres wysylki po submicie //  method="GET" patrz ponizej-->
+            <p>
+                First Name: <input type="text" name="first_name">
+            </p>
+            <p>
+                Last Name: <input type="text" name="last_name">
+            </p>
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
+
+
+<!--
+
+The form-data can be sent as URL variables (with method="get") or as HTTP post transaction (with method="post").
+
+Notes on GET:
+
+Appends form-data into the URL in name/value pairs
+The length of a URL is limited (about 3000 characters)
+Never use GET to send sensitive data! (will be visible in the URL)
+Useful for form submissions where a user want to bookmark the result
+GET is better for non-secure data, like query strings in Google
+
+-->

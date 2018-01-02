@@ -1,47 +1,44 @@
-var fs = require('fs');
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
-var stringifyFile;
-
-app.use(bodyParser.json()); // to pozwoli wykorzystać body-parser (middleware)
+app.use(express.static('assets'));
 
 
-var read = function(req, res) {
-    fs.readFile('./test.json', 'utf-8', function(err, data) {
-        if (err) throw err;
-        stringifyFile = data;
-        res.send(stringifyFile);
-    });
-}
+app.get('/', function(req, res) {
+    console.log('Received GET request at "/".');
+    res.sendFile('/index.html');
+});
 
-app.get('/getNote', function(req, res) {
-    console.log('Received GET request at "/getNote".');
-    read(req, res);
+
+app.get('/userform', function(req, res) {
+    console.log('Received GET request at "/userform".');
+    const response = {
+
+        first_name: req.query.first_name,
+        last_name: req.query.last_name
+    };
+    res.end(JSON.stringify(response)); // zakoncz odpowiedz, ale jeszcze przetworz const response na jsonowy string
+    /* 
+    res.write('<h1>It works!</h1>', 'utf8');
+    res.end();
+
+    is equivalent to
+
+    res.end('<h1>It works!</h1>', 'utf8');
+     */
 });
 
 
 
-app.post('/updateNote/:note', function(req, res) {
-    console.log('Received POST request at "/updateNote/:note".');
+var server = app.listen(3000, 'localhost', function() {
 
-    stringifyFile += JSON.stringify(req.params.note);
-    
-    fs.writeFile('./test.json', stringifyFile, function(err) {
+    var host = server.address().address;
+    var port = server.address().port;
 
-        if (err) throw err;
-        console.log('file updated!');
-        res.send(stringifyFile);
-    });
-
-    /* writeFile(). Asynchronously writes data to a file, replacing the file if it already exists.
-    data can be a string or a buffer.
-    The encoding option is ignored if data is a buffer. 
-    It defaults to 'utf8'. */
+    console.log('App is listening at http://' + host + ':' + port); 
+    //tutaj sami definiujemy port i adres, ale w prawdziwej aplikacji moglibyśmy tych wartości nie znać, dlatego wpisujemy zmiennymi
 });
 
-app.listen(3000);
 
 app.use(function (req, res, next) {
-    res.status(404).send('Couldn\'t find what you\'re looking for.')
+    res.status(404).send('Sorry, couldn\'t find what you were looking for.');
 });
